@@ -1,22 +1,19 @@
 use anyhow::Result;
 use tokio::signal;
-use tracing::{info, Level};
+use tracing::{Level, info};
 use tracing_subscriber::fmt;
 
 mod app;
-mod modules;
 mod config;
 mod error;
+mod modules;
 
 use app::rust_saas;
 use config::AppConfig;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    fmt()
-        .with_target(false)
-        .with_max_level(Level::INFO)
-        .init();
+    fmt().with_target(false).with_max_level(Level::INFO).init();
 
     // Load configuration from environment variables
     let config = AppConfig::from_env();
@@ -27,12 +24,12 @@ async fn main() -> Result<()> {
     info!("🚀 Server starting on http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
-    
+
     // Create shutdown signal
     let shutdown = shutdown_signal();
-    
+
     info!("Press Ctrl+C to shutdown gracefully");
-    
+
     // Start server with graceful shutdown
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown)

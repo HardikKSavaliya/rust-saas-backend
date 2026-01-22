@@ -1,5 +1,5 @@
-use axum::{http::StatusCode, response::IntoResponse};
 use crate::error::{AppError, AppResult};
+use axum::{http::StatusCode, response::IntoResponse};
 
 /// Root endpoint
 pub async fn root() -> impl IntoResponse {
@@ -30,7 +30,7 @@ pub async fn example_success() -> impl IntoResponse {
 pub async fn example_result() -> AppResult<impl IntoResponse> {
     // Simulate some operation that might fail
     let result: Result<String, String> = Err("Something went wrong".to_string());
-    
+
     // Convert to AppError using anyhow for error chaining
     result
         .map_err(|e| AppError::internal(format!("Operation failed: {}", e)))
