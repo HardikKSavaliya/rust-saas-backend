@@ -150,17 +150,21 @@ impl IntoResponse for AppError {
 // Note: serde_json::Error and config::ConfigError are handled via #[source] attribute above
 // anyhow::Error is handled via #[from] attribute above
 
-// Database error conversions (for future SQLx integration)
-// Uncomment when SQLx is added:
-// impl From<sqlx::Error> for AppError {
-//     fn from(err: sqlx::Error) -> Self {
+// Database error conversions (for future SeaORM integration)
+// Uncomment when SeaORM is added:
+// impl From<sea_orm::DbErr> for AppError {
+//     fn from(err: sea_orm::DbErr) -> Self {
 //         match err {
-//             sqlx::Error::RowNotFound => AppError::NotFound("Resource not found".to_string()),
-//             sqlx::Error::Database(db_err) => {
-//                 if db_err.code().as_deref() == Some("23505") {
-//                     AppError::Conflict("Duplicate entry".to_string())
+//             sea_orm::DbErr::RecordNotFound(_) => AppError::NotFound("Resource not found".to_string()),
+//             sea_orm::DbErr::Exec(sea_orm::RuntimeErr::SqlxError(sqlx_err)) => {
+//                 if let Some(db_err) = sqlx_err.as_database_error() {
+//                     if db_err.code().as_deref() == Some("23505") {
+//                         AppError::Conflict("Duplicate entry".to_string())
+//                     } else {
+//                         AppError::Database(db_err.to_string())
+//                     }
 //                 } else {
-//                     AppError::Database(db_err.to_string())
+//                     AppError::Database(err.to_string())
 //                 }
 //             }
 //             _ => AppError::Database(err.to_string()),

@@ -1,6 +1,6 @@
 # Rust SaaS Backend
 
-A production-grade, modular **Rust backend starter** for building SaaS applications using **Axum, PostgreSQL, SQLx, JWT authentication, and Stripe billing**.
+A production-grade, modular **Rust backend starter** for building SaaS applications using **Axum, PostgreSQL, SeaORM, JWT authentication, and Stripe billing**.
 
 This project is designed to:
 - Serve as a **real-world SaaS backend template**
@@ -15,7 +15,7 @@ This project is designed to:
 - ✅ REST API using Axum
 - ✅ JWT-based authentication (access + refresh tokens)
 - ✅ Secure password hashing (Argon2)
-- ✅ PostgreSQL with SQLx
+- ✅ PostgreSQL with SeaORM
 - ✅ Modular domain-driven architecture
 - ✅ Role-based access control (RBAC)
 - ✅ Stripe subscriptions & webhooks (optional)
@@ -99,7 +99,8 @@ docker-compose up -d db
 ### 4️⃣ Run Migrations
 
 ```bash
-sqlx migrate run
+# Using sea-orm-cli (install with: cargo install sea-orm-cli)
+sea-orm-cli migrate up
 ```
 
 ---

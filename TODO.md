@@ -26,7 +26,7 @@ This document tracks development progress for building a **production-grade SaaS
 
 ### Database
 - [ ] PostgreSQL integration
-- [ ] SQLx migrations
+- [ ] SeaORM migrations
 - [ ] User table schema
 - [ ] Soft deletes
 - [ ] DB health check
@@ -113,7 +113,7 @@ This document tracks development progress for building a **production-grade SaaS
 ## 🧠 Interview Readiness Checklist
 
 - [ ] Explain Axum extractor model
-- [ ] Explain SQLx compile-time queries
+- [ ] Explain SeaORM entity model and queries
 - [ ] Explain JWT auth vs sessions
 - [ ] Explain multi-tenant schema design
 - [ ] Explain Stripe webhook security
