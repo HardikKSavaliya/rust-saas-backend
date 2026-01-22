@@ -43,4 +43,14 @@ impl AppConfig {
             .parse()
             .expect("Invalid server address")
     }
+
+    /// Check if running in production environment
+    pub fn is_production(&self) -> bool {
+        self.environment.eq_ignore_ascii_case("production")
+    }
+
+    /// Check if running in development environment
+    pub fn is_development(&self) -> bool {
+        self.environment.eq_ignore_ascii_case("development")
+    }
 }

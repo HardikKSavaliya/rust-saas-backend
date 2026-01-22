@@ -692,7 +692,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-saas-backend"
+name = "rust-saas-boilerplate"
 version = "0.1.0"
 dependencies = [
  "anyhow",

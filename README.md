@@ -1,12 +1,13 @@
-# Rust SaaS Backend
+# Rust SaaS Boilerplate
 
-A production-grade, modular **Rust backend starter** for building SaaS applications using **Axum, PostgreSQL, SeaORM, JWT authentication, and Stripe billing**.
+A production-grade, modular **Rust SaaS boilerplate** - A complete starter template for building SaaS applications using **Axum, PostgreSQL, SeaORM, JWT authentication, and Stripe billing**.
 
-This project is designed to:
-- Serve as a **real-world SaaS backend template**
+This boilerplate is designed to:
+- Serve as a **complete SaaS application starter template**
 - Be **interview-ready** for Rust backend roles
 - Scale cleanly to multi-tenant, subscription-based products
 - Power real products like **100daysofchallenge.io**
+- Act as a **boilerplate** similar to ABP (ASP.NET Boilerplate) for Rust
 
 ---
 
@@ -68,7 +69,33 @@ Each module follows:
 
 ---
 
-## ⚙️ Getting Started
+## 📦 Using as a Package/Boilerplate
+
+This boilerplate can be used as a library dependency in other Rust projects or as a starting point for your SaaS application.
+
+### Add to Your Project
+
+```toml
+[dependencies]
+rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
+# Or from git:
+# rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git" }
+```
+
+### Quick Start
+
+```rust
+use rust_saas_boilerplate::create_app;
+
+let app = create_app();
+// Use in your Axum router
+```
+
+See [`USAGE.md`](./USAGE.md) for detailed usage examples.
+
+---
+
+## ⚙️ Getting Started (Standalone Server)
 
 ### 1️⃣ Prerequisites
 
@@ -81,8 +108,8 @@ Each module follows:
 ### 2️⃣ Clone & Setup
 
 ```bash
-git clone https://github.com/yourname/rust-saas-backend.git
-cd rust-saas-backend
+git clone https://github.com/HardikKSavaliya/rust-saas-backend.git
+cd rust-saas-boilerplate
 cp .env.example .env
 ```
 
@@ -133,12 +160,31 @@ GET  /health
 ## 📦 Environment Variables
 
 ```env
+# Server Configuration
+HOST=0.0.0.0
+PORT=3000
+ENVIRONMENT=development  # or "production"
+
+# Database
 DATABASE_URL=postgres://postgres:postgres@localhost:5432/saas
+
+# Authentication
 JWT_SECRET=supersecretkey
-SERVER_ADDR=0.0.0.0:3000
+
+# Billing (optional)
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Logging (optional - overrides default)
+# RUST_LOG=info,rust_saas_boilerplate=debug
 ```
+
+### Logging Behavior
+
+- **Production** (`ENVIRONMENT=production`): Only ERROR level logs are shown
+- **Development** (`ENVIRONMENT=development`): All logs (INFO, DEBUG, etc.) are shown
+- **Override**: Set `RUST_LOG` environment variable to override default behavior
+- **Errors**: ERROR level logs always show in both environments
 
 ---
 
@@ -153,8 +199,8 @@ cargo test
 ## 🐳 Docker
 
 ```bash
-docker build -t rust-saas-backend .
-docker run -p 3000:3000 rust-saas-backend
+docker build -t rust-saas-boilerplate .
+docker run -p 3000:3000 rust-saas-boilerplate
 ```
 
 ---

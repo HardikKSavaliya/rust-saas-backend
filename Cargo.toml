@@ -1,7 +1,21 @@
 [package]
-name = "rust-saas-backend"
+name = "rust-saas-boilerplate"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Your Name <you@example.com>"]
+description = "Production-grade Rust SaaS boilerplate - A complete starter template for building SaaS applications with authentication, user management, and more"
+license = "MIT"
+repository = "https://github.com/HardikKSavaliya/rust-saas-backend"
+keywords = ["saas", "boilerplate", "starter", "template", "backend", "api", "axum", "rust"]
+categories = ["web-programming", "authentication", "template"]
+
+[lib]
+name = "rust_saas_boilerplate"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rust-saas-boilerplate"
+path = "src/main.rs"
 
 [dependencies]
 # Web framework

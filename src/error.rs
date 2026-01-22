@@ -118,14 +118,19 @@ impl AppError {
     }
 
     /// Log the error appropriately
+    /// Errors are always logged, regardless of environment
     pub fn log_error(&self) {
         let status = self.status_code();
         if status.is_server_error() {
+            // Always log server errors (ERROR level)
             error!("Server error: {}", self);
         } else if status == StatusCode::UNAUTHORIZED || status == StatusCode::FORBIDDEN {
-            tracing::warn!("Auth error: {}", self);
+            // Auth errors - log as ERROR in production, WARN in development
+            error!("Auth error: {}", self);
         } else {
-            tracing::debug!("Client error: {}", self);
+            // Client errors - log as ERROR in production, DEBUG in development
+            // But since we want errors to show in production, log as ERROR
+            error!("Client error: {}", self);
         }
     }
 }

@@ -1,7 +1,7 @@
 use anyhow::Result;
 use tokio::signal;
-use tracing::{Level, info};
-use tracing_subscriber::fmt;
+use tracing::{info};
+use tracing_subscriber::{fmt, EnvFilter};
 
 mod app;
 mod config;
@@ -11,12 +11,33 @@ mod modules;
 use app::rust_saas;
 use config::AppConfig;
 
+/// Initialize logging based on environment
+/// - Production: Only ERROR level logs
+/// - Development: All logs (INFO, DEBUG, etc.)
+fn init_logging(config: &AppConfig) {
+    let filter = if config.is_production() {
+        // Production: Only show ERROR level and above
+        EnvFilter::new("error")
+    } else {
+        // Development: Show all logs (can be overridden by RUST_LOG env var)
+        EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| EnvFilter::new("info"))
+    };
+
+    fmt()
+        .with_target(false)
+        .with_env_filter(filter)
+        .init();
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
-    fmt().with_target(false).with_max_level(Level::INFO).init();
-
-    // Load configuration from environment variables
+    // Load configuration from environment variables first
     let config = AppConfig::from_env();
+    
+    // Initialize logging based on environment
+    init_logging(&config);
+    
     let addr = config.server_addr();
 
     let app = rust_saas();
