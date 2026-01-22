@@ -50,6 +50,7 @@ impl AppConfig {
     }
 
     /// Check if running in development environment
+    #[allow(dead_code)] // Public API method for library users
     pub fn is_development(&self) -> bool {
         self.environment.eq_ignore_ascii_case("development")
     }
