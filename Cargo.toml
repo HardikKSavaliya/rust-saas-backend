@@ -7,7 +7,7 @@ description = "Production-grade Rust SaaS boilerplate - A complete starter templ
 license = "MIT"
 repository = "https://github.com/HardikKSavaliya/rust-saas-backend"
 keywords = ["saas", "boilerplate", "starter", "template", "backend"]
-categories = ["web-programming", "authentication", "template"]
+categories = ["web-programming", "authentication", "api-bindings"]
 
 [lib]
 name = "rust_saas_boilerplate"
