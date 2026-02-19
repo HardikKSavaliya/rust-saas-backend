@@ -73,13 +73,29 @@ Each module follows:
 
 This boilerplate can be used as a library dependency in other Rust projects or as a starting point for your SaaS application.
 
+### Quick Start (Just like axum!)
+
+```toml
+[dependencies]
+rust-saas-boilerplate = "0.1.0"  # From crates.io - just like axum!
+```
+
+That's it! Simple and clean, just like using any other Rust crate.
+
 ### Add to Your Project
 
 ```toml
 [dependencies]
+rust-saas-boilerplate = "0.1.0"  # From crates.io - just like axum!
+```
+
+Or use from other sources:
+```toml
+# From local path
 rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
-# Or from git:
-# rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git" }
+
+# From git
+rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git" }
 ```
 
 ### Quick Start
@@ -92,6 +108,10 @@ let app = create_app();
 ```
 
 See [`USAGE.md`](./USAGE.md) for detailed usage examples.
+
+For specific module usage (like health checks), see [`HEALTH_USAGE.md`](./HEALTH_USAGE.md).
+
+For complete package usage guide, see [`PACKAGE_USAGE.md`](./PACKAGE_USAGE.md).
 
 ---
 

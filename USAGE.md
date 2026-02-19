@@ -4,7 +4,18 @@ This guide explains how to use `rust-saas-boilerplate` as a dependency in your o
 
 ## Installation
 
-### Option 1: Local Path (Development)
+### Option 1: From crates.io (Recommended) ⭐
+
+Just like using `axum`, you can now use it from crates.io:
+
+```toml
+[dependencies]
+rust-saas-boilerplate = "0.1.0"
+```
+
+That's it! Simple and clean, just like any other Rust crate.
+
+### Option 2: Local Path (Development)
 
 If you have the repository locally:
 
@@ -13,7 +24,7 @@ If you have the repository locally:
 rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
 ```
 
-### Option 2: Git Repository
+### Option 3: Git Repository
 
 If the repository is on GitHub or another git host:
 
@@ -29,15 +40,6 @@ To use a specific branch or tag:
 rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git", branch = "main" }
 # Or
 rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git", tag = "v0.1.0" }
-```
-
-### Option 3: Published to crates.io (Future)
-
-Once published to crates.io:
-
-```toml
-[dependencies]
-rust-saas-boilerplate = "0.1.0"
 ```
 
 ## Basic Usage
@@ -80,9 +82,21 @@ fn my_handler() -> AppResult<String> {
 
 ```rust
 use rust_saas_boilerplate::modules::health;
+use axum::Router;
 
 // Use health check routes
 let health_routes = health::routes::health_routes();
+
+// Combine with your own routes
+let app = Router::new()
+    .merge(health_routes)  // Adds /health, /, /example/*
+    .route("/custom", get(|| async { "Custom" }));
+
+// Or use individual handlers
+use rust_saas_boilerplate::modules::health::handler;
+let app = Router::new()
+    .route("/health", get(handler::health_check))
+    .route("/", get(handler::root));
 ```
 
 ## Example: Integrating into Your Project

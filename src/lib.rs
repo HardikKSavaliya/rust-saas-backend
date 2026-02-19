@@ -17,7 +17,9 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
+//! rust-saas-boilerplate = "0.1.0"  # From crates.io - just like axum!
+//! # Or from path:
+//! # rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
 //! # Or from git:
 //! # rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git" }
 //! ```

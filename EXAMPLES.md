@@ -11,7 +11,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rust-saas-boilerplate = { path = "../rust-saas-boilerplate" }
+# Use from crates.io - just like axum!
+rust-saas-boilerplate = "0.1.0"
 tokio = { version = "1.49", features = ["full"] }
 axum = "0.8"
 ```
@@ -70,9 +71,20 @@ async fn main() {
 }
 ```
 
-## Example 3: Using from Git Repository
+## Example 3: Using from crates.io (Recommended)
 
 In your project's `Cargo.toml`:
+
+```toml
+[dependencies]
+rust-saas-boilerplate = "0.1.0"  # Just like axum = "0.8"!
+```
+
+That's it! Simple and clean.
+
+## Example 3b: Using from Git Repository
+
+If you need the latest from git:
 
 ```toml
 [dependencies]
@@ -86,7 +98,7 @@ Or use a specific tag/version:
 rust-saas-boilerplate = { git = "https://github.com/HardikKSavaliya/rust-saas-backend.git", tag = "v0.1.0" }
 ```
 
-## Example 4: Using Specific Modules
+## Example 4: Using Health Module
 
 ```rust
 use rust_saas_boilerplate::modules::health;
@@ -95,6 +107,17 @@ use axum::Router;
 fn create_my_app() -> Router {
     Router::new()
         .merge(health::routes::health_routes())
+        // Health routes provide: /health, /, /example/*
+        // Add your own routes
+}
+
+// Or use individual handlers:
+use rust_saas_boilerplate::modules::health::handler;
+
+fn create_my_app_with_custom_health() -> Router {
+    Router::new()
+        .route("/health", axum::routing::get(handler::health_check))
+        .route("/", axum::routing::get(handler::root))
         // Add your own routes
 }
 ```
