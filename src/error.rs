@@ -156,27 +156,18 @@ impl IntoResponse for AppError {
 // Note: serde_json::Error and config::ConfigError are handled via #[source] attribute above
 // anyhow::Error is handled via #[from] attribute above
 
-// Database error conversions (for future SeaORM integration)
-// Uncomment when SeaORM is added:
-// impl From<sea_orm::DbErr> for AppError {
-//     fn from(err: sea_orm::DbErr) -> Self {
-//         match err {
-//             sea_orm::DbErr::RecordNotFound(_) => AppError::NotFound("Resource not found".to_string()),
-//             sea_orm::DbErr::Exec(sea_orm::RuntimeErr::SqlxError(sqlx_err)) => {
-//                 if let Some(db_err) = sqlx_err.as_database_error() {
-//                     if db_err.code().as_deref() == Some("23505") {
-//                         AppError::Conflict("Duplicate entry".to_string())
-//                     } else {
-//                         AppError::Database(db_err.to_string())
-//                     }
-//                 } else {
-//                     AppError::Database(err.to_string())
-//                 }
-//             }
-//             _ => AppError::Database(err.to_string()),
-//         }
-//     }
-// }
+impl From<sea_orm::DbErr> for AppError {
+    fn from(err: sea_orm::DbErr) -> Self {
+        let err_str = err.to_string();
+        match err {
+            sea_orm::DbErr::RecordNotFound(msg) => AppError::NotFound(msg),
+            _ if err_str.contains("duplicate key") || err_str.contains("23505") => {
+                AppError::Conflict("Resource already exists".to_string())
+            }
+            _ => AppError::Database(err_str),
+        }
+    }
+}
 
 /// Result type alias for convenience
 pub type AppResult<T> = Result<T, AppError>;

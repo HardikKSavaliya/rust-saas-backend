@@ -9,6 +9,8 @@ pub struct AppConfig {
     pub port: u16,
     #[serde(default = "default_environment")]
     pub environment: String,
+    #[serde(default = "default_database_url")]
+    pub database_url: String,
 }
 
 fn default_host() -> String {
@@ -23,34 +25,34 @@ fn default_environment() -> String {
     "development".to_string()
 }
 
+fn default_database_url() -> String {
+    "postgres://postgres:pgadmin@localhost:5432/postgres".to_string()
+}
+
 impl AppConfig {
     pub fn from_env() -> Self {
-        // Load .env file
         dotenvy::dotenv().ok();
 
-        // Load config
+        // Use "__" separator so DATABASE_URL maps to database_url (not database.url)
         let cfg = config::Config::builder()
-            .add_source(config::Environment::default()) // read from ENV
+            .add_source(config::Environment::default().separator("__"))
             .build()
             .unwrap();
 
         cfg.try_deserialize::<AppConfig>().unwrap()
     }
 
-    /// Get the server address as a SocketAddr
     pub fn server_addr(&self) -> SocketAddr {
         format!("{}:{}", self.host, self.port)
             .parse()
             .expect("Invalid server address")
     }
 
-    /// Check if running in production environment
     pub fn is_production(&self) -> bool {
         self.environment.eq_ignore_ascii_case("production")
     }
 
-    /// Check if running in development environment
-    #[allow(dead_code)] // Public API method for library users
+    #[allow(dead_code)]
     pub fn is_development(&self) -> bool {
         self.environment.eq_ignore_ascii_case("development")
     }

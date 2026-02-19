@@ -5,21 +5,20 @@ use tracing_subscriber::{fmt, EnvFilter};
 
 mod app;
 mod config;
+mod db;
 mod error;
+mod migration;
 mod modules;
+mod state;
 
 use app::rust_saas;
 use config::AppConfig;
+use state::AppState;
 
-/// Initialize logging based on environment
-/// - Production: Only ERROR level logs
-/// - Development: All logs (INFO, DEBUG, etc.)
 fn init_logging(config: &AppConfig) {
     let filter = if config.is_production() {
-        // Production: Only show ERROR level and above
         EnvFilter::new("error")
     } else {
-        // Development: Show all logs (can be overridden by RUST_LOG env var)
         EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
     };
 
@@ -28,26 +27,26 @@ fn init_logging(config: &AppConfig) {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Load configuration from environment variables first
     let config = AppConfig::from_env();
-
-    // Initialize logging based on environment
     init_logging(&config);
+    info!("database url: {}", config.database_url);
+    info!("Connecting to database...");
+    let db = db::connect_database(&config.database_url)
+        .await
+        .expect("Failed to connect to database");
+    info!("Database connected successfully");
 
+    let state = AppState::new(db);
     let addr = config.server_addr();
+    let app = rust_saas(state);
 
-    let app = rust_saas();
-
-    info!("🚀 Server starting on http://{}", addr);
+    info!("Server starting on http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
-
-    // Create shutdown signal
     let shutdown = shutdown_signal();
 
     info!("Press Ctrl+C to shutdown gracefully");
 
-    // Start server with graceful shutdown
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown)
         .await?;
@@ -56,7 +55,6 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-/// Handles shutdown signals (SIGTERM, SIGINT)
 async fn shutdown_signal() {
     let ctrl_c = async {
         signal::ctrl_c()

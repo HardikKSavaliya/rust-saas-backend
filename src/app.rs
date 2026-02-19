@@ -2,10 +2,10 @@ use axum::Router;
 use tower::ServiceBuilder;
 use tower_http::trace::TraceLayer;
 
-use crate::modules::health;
+use crate::modules::{health, users};
+use crate::state::AppState;
 
-/// Creates and configures the main application router
-pub fn rust_saas() -> Router {
+pub fn rust_saas(state: AppState) -> Router {
     Router::new()
         .nest("/api", api_routes())
         .merge(health::routes::health_routes())
@@ -14,8 +14,9 @@ pub fn rust_saas() -> Router {
                 .layer(TraceLayer::new_for_http())
                 .into_inner(),
         )
+        .with_state(state)
 }
 
-fn api_routes() -> Router {
-    Router::new()
+fn api_routes() -> Router<AppState> {
+    Router::new().nest("/users", users::routes::user_routes())
 }
