@@ -1,30 +1,30 @@
 use axum::{
-    Json,
     http::StatusCode,
     response::{IntoResponse, Response},
+    Json,
 };
 use thiserror::Error;
 use tracing::error;
 
 /// Application error type
-/// 
+///
 /// Uses `thiserror` for structured error types that can be returned from handlers.
 /// Uses `anyhow` internally for error chaining and context in Internal errors.
-/// 
+///
 /// # Usage
-/// 
+///
 /// ```rust
 /// // Return error directly (AppError implements IntoResponse)
 /// pub async fn handler() -> AppError {
 ///     AppError::NotFound("User not found".to_string())
 /// }
-/// 
+///
 /// // Use Result with AppError
 /// pub async fn handler() -> AppResult<String> {
 ///     let result: Result<String, String> = some_operation()?;
 ///     Ok(result)
 /// }
-/// 
+///
 /// // Convert anyhow::Error to AppError (automatic via From trait)
 /// pub async fn handler() -> AppResult<String> {
 ///     let value: String = some_anyhow_operation().map_err(AppError::from)?;

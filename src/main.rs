@@ -1,6 +1,6 @@
 use anyhow::Result;
 use tokio::signal;
-use tracing::{info};
+use tracing::info;
 use tracing_subscriber::{fmt, EnvFilter};
 
 mod app;
@@ -20,24 +20,20 @@ fn init_logging(config: &AppConfig) {
         EnvFilter::new("error")
     } else {
         // Development: Show all logs (can be overridden by RUST_LOG env var)
-        EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| EnvFilter::new("info"))
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
     };
 
-    fmt()
-        .with_target(false)
-        .with_env_filter(filter)
-        .init();
+    fmt().with_target(false).with_env_filter(filter).init();
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     // Load configuration from environment variables first
     let config = AppConfig::from_env();
-    
+
     // Initialize logging based on environment
     init_logging(&config);
-    
+
     let addr = config.server_addr();
 
     let app = rust_saas();

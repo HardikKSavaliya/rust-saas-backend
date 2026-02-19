@@ -53,42 +53,38 @@ pub use error::{AppError, AppResult};
 /// - Production: Only ERROR level logs
 /// - Development: All logs (INFO, DEBUG, etc.)
 /// - Can be overridden by RUST_LOG environment variable
-/// 
+///
 /// # Example
-/// 
+///
 /// ```rust,no_run
 /// use rust_saas_boilerplate::{init_logging, AppConfig};
-/// 
+///
 /// let config = AppConfig::from_env();
 /// init_logging(&config);
 /// ```
 pub fn init_logging(config: &AppConfig) {
     use tracing_subscriber::{fmt, EnvFilter};
-    
+
     let filter = if config.is_production() {
         // Production: Only show ERROR level and above
         EnvFilter::new("error")
     } else {
         // Development: Show all logs (can be overridden by RUST_LOG env var)
-        EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| EnvFilter::new("info"))
+        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"))
     };
 
-    fmt()
-        .with_target(false)
-        .with_env_filter(filter)
-        .init();
+    fmt().with_target(false).with_env_filter(filter).init();
 }
 
 /// Create the application router
 /// This is the main entry point for using this library
-/// 
+///
 /// # Example
-/// 
+///
 /// ```rust,no_run
 /// use rust_saas_boilerplate::create_app;
 /// use axum::Router;
-/// 
+///
 /// let app: Router = create_app();
 /// // Merge with your own routes or use as-is
 /// ```
